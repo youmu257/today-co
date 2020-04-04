@@ -8,6 +8,7 @@ from util import unixTime2DateString
 from Enum.avgleSearchType import AvgleSeachType
 from Enum.avgleTimeType import AvgleTimeType
 from database.mysqlConnect import *
+from database.model.pornVideo import *
 
 
 def insertVideoDb(videos):
@@ -20,7 +21,7 @@ def insertVideoDb(videos):
     newVideo[PornVideo.create_date] = unixTime2DateString(videos['addtime'])
 
     PornVideo.insert(newVideo)\
-        .on_conflict_ignore(True)\
+        .on_conflict('replace')\
         .execute()
 
 # Parameter    | Default | Values
@@ -50,8 +51,8 @@ def getVideo(
     url = AVGLE_LIST_VIDEOS_API_URL.format(
         0,
         limit,
-        searchType.name,
-        timeType.name
+        searchType.value,
+        timeType.value
     )
 
     try:
