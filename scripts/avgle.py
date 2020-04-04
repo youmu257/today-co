@@ -18,11 +18,14 @@ def insertVideoDb(videos):
     newVideo[PornVideo.video_id] = videos['vid']
     newVideo[PornVideo.view_ratings] = videos['framerate']
     newVideo[PornVideo.video_title] = videos['title']
+    newVideo[PornVideo.video_url] = videos['video_url'].split('/', 4)[4]
+    newVideo[PornVideo.img_url] = videos['preview_url'].split('/', 4)[4]
     newVideo[PornVideo.create_date] = unixTime2DateString(videos['addtime'])
 
-    PornVideo.insert(newVideo)\
-        .on_conflict('replace')\
-        .execute()
+    insertAndReplace(newVideo)
+
+    return newVideo
+
 
 # Parameter    | Default | Values
 # o (search)   | mr      | bw (Last viewed), mr (Latest), mv (Most viewed),
@@ -72,9 +75,9 @@ def getVideo(
     closeConnect()
 
 
-# get the top 10 video infos(daily most_viewed)
-getVideo(AvgleSeachType.MostViewed, AvgleTimeType.TODAY, 10)
+if __name__ == '__main__':
+    # get the top 10 video infos(daily most_viewed)
+    getVideo(AvgleSeachType.MostViewed, AvgleTimeType.TODAY, 10)
 
-
-# get the top 10 viedo infos(weekly most_viewed)
-getVideo(AvgleSeachType.MostViewed, AvgleTimeType.WEEK, 10)
+    # get the top 10 viedo infos(weekly most_viewed)
+    getVideo(AvgleSeachType.MostViewed, AvgleTimeType.WEEK, 10)

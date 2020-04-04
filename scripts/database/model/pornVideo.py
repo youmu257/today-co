@@ -10,6 +10,8 @@ class PornVideo(BaseModel):
     video_id = CharField()
     view_ratings = CharField()
     video_title = CharField()
+    video_url = CharField()
+    img_url = CharField()
     create_date = DateTimeField()
 
     class Meta:
@@ -33,3 +35,9 @@ def getTopDailyPornVideos(top):
             .order_by(PornVideo.view_ratings.desc())
             .limit(top)
             .namedtuples())
+
+
+def insertAndReplace(newVideo):
+    return PornVideo.insert(newVideo)\
+        .on_conflict('replace')\
+        .execute()
